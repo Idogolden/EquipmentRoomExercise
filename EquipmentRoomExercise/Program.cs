@@ -66,9 +66,9 @@ class Program
         // לאחר מימוש הבדיקה ב-set, יש לוודא שמצב כזה מטופל כראוי.
         // TODO: יש להוסיף try-catch מתאימים סביב הקריאות שעלולות לזרוק חריגה.
          int negativeComputers = -5;
-        EquipmentRoom invalidRoom = new EquipmentRoom(negativeComputers);
         try
         {
+            EquipmentRoom invalidRoom = new EquipmentRoom(negativeComputers);
             room.Borrow(4);
             Console.WriteLine("ממשיכים בתוכנית...");
 
@@ -77,6 +77,14 @@ class Program
         catch (EquipmentUnavailableException ex)
         {
             Console.WriteLine(ex.Message);
+        }
+        catch (ArgumentOutOfRangeException ex) 
+        {
+            if (ex.amount < 0) 
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Difference);
+            }
         }
         
         Console.WriteLine("Numbers of pc avilable: " + room.AvailableComputers);
