@@ -77,16 +77,14 @@ class Program
         catch (EquipmentUnavailableException ex)
         {
             Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Amount);
+            Console.WriteLine(ex.Difference);
         }
-        catch (ArgumentOutOfRangeException ex) 
+        catch (ArgumentOutOfRangeException ex)
         {
-            if (ex.amount < 0) 
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Difference);
-            }
+            Console.WriteLine(ex.Message);
         }
-        
+
         Console.WriteLine("Numbers of pc avilable: " + room.AvailableComputers);
     }
 }
