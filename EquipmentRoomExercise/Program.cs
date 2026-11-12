@@ -1,4 +1,4 @@
-okusing System;
+using System;
 
 // <summary>
 //Todo: צרו מחלקת חריגים המטפלת במקרים בהם אין מספיק מחשבים זמינים להשאלה.
@@ -6,6 +6,18 @@ okusing System;
 
 
 
+    public class EquipmentUnavailableException : Exception
+    {
+        public int Amount { get; }
+        public int Difference { get; }
+        public EquipmentUnavailableException(int amount, int avilablepc, string name) : base
+            (name)
+        {
+            Amount = amount;
+            Difference = amount-avilablepc;
+        }
+     
+    }
 class EquipmentRoom
 {
     private int availableComputers;
@@ -18,8 +30,10 @@ class EquipmentRoom
         }
         set
         {
-            // TODO: יש לבדוק שמספר המחשבים אינו שלילי.
-            // אם כן, יש לזרוק חריגה מתאימה.
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException("Avilablecomputers", "Number can not be smaller then 0");
+            }
             availableComputers = value;
         }
     }
@@ -31,12 +45,10 @@ class EquipmentRoom
 
     public void Borrow(int amount)
     {
-       
-            // TODO: יש לזרוק חריגה מתאימה כאשר אין מספיק מחשבים זמינים.
-        
-
-
-
+        if (amount > AvailableComputers) 
+        {
+            throw new EquipmentUnavailableException(amount,AvailableComputers,"you asked for more then you have") ;
+        }
         AvailableComputers -= amount;
         Console.WriteLine($"הושאלו {amount} מחשבים בהצלחה.");
     }
@@ -53,16 +65,20 @@ class Program
         // יצירת חדר מחשבים עם מספר מחשבים שלילי:
         // לאחר מימוש הבדיקה ב-set, יש לוודא שמצב כזה מטופל כראוי.
         // TODO: יש להוסיף try-catch מתאימים סביב הקריאות שעלולות לזרוק חריגה.
-       // int negativeComputers = -5;
-       // EquipmentRoom invalidRoom = new EquipmentRoom(negativeComputers);
+         int negativeComputers = -5;
+        EquipmentRoom invalidRoom = new EquipmentRoom(negativeComputers);
+        try
+        {
+            room.Borrow(4);
+            Console.WriteLine("ממשיכים בתוכנית...");
 
-
-        room.Borrow(4);
-        Console.WriteLine("ממשיכים בתוכנית...");
-        
             room.Borrow(8);
+        }
+        catch (EquipmentUnavailableException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
         
-
-        Console.WriteLine("מספר המחשבים הזמינים: " + room.AvailableComputers);
+        Console.WriteLine("Numbers of pc avilable: " + room.AvailableComputers);
     }
 }
